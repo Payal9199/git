@@ -1,0 +1,55 @@
+name: Deploy 
+
+on:
+  pull:
+     branch:
+      - main
+      - deploy
+  push-request:
+     branch: 
+       - main
+
+jobs:
+   build:
+     name: Build
+     runs-on: ubuntu-latest
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform
+        uses: hashicorp/setup-terraform@v1
+        with: 
+          version: 1.7.3
+
+      -name: Configure AWS credential
+       uses: aws-actions/configure-aws-credentials@v1
+       with: 
+          aws-access-key-id = ${{ SECRETS-AWS-ACCESS-KEY-ID }}
+          aws-secret-access-key = ${{ SECRETS-AWS-SECRET-ACCESS-KEY }}
+          aws-region = ap-south-1
+          
+      - name: Terraform initialized
+        run: terraform init
+
+   test:
+     name: Test  
+     needs: build
+     steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform format
+        run: terraform fmt
+      - name: Terraform planning
+        run: terraform plan
+
+   deploy:
+      name: Deploy
+      needs: test
+      steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform applied
+        run: terraform apply -auto-approve
