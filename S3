@@ -1,0 +1,187 @@
+Here’s a list of commonly asked S3 (Amazon Simple Storage Service) interview questions along with their answers:
+
+
+---
+
+Basic Questions
+
+1. What is Amazon S3?
+Amazon S3 is an object storage service that provides scalability, data availability, security, and performance. It is used to store and retrieve any amount of data at any time from anywhere.
+
+
+2. What are the main features of S3?
+
+Scalability and durability (11 nines: 99.999999999%)
+
+Data versioning
+
+Lifecycle policies
+
+Object-level tagging and management
+
+Event notifications
+
+Encryption (at rest and in transit)
+
+Cross-region replication (CRR)
+
+
+
+3. What are S3 buckets and objects?
+
+A bucket is a container for storing objects. Each bucket is unique and has a globally unique name.
+
+An object is the fundamental entity stored in a bucket, consisting of key (name), value (data), metadata, and version ID.
+
+
+
+4. How is data secured in S3?
+
+Data encryption:
+
+At rest: SSE-S3, SSE-KMS, or SSE-C.
+
+In transit: SSL/TLS.
+
+
+Access control:
+
+IAM policies.
+
+Bucket policies.
+
+Access Control Lists (ACLs).
+
+
+
+
+
+
+---
+
+Intermediate Questions
+
+5. What are the storage classes in S3?
+
+S3 Standard: General-purpose storage.
+
+S3 Intelligent-Tiering: Automatically moves data to the most cost-effective access tier.
+
+S3 Standard-IA (Infrequent Access): For data accessed less frequently.
+
+S3 One Zone-IA: Like Standard-IA but stored in a single AZ.
+
+S3 Glacier: Long-term archival storage.
+
+S3 Glacier Deep Archive: Cheapest storage for data accessed very rarely.
+
+
+
+6. What is Versioning in S3?
+Versioning allows you to keep multiple versions of an object in the same bucket, which helps protect against accidental overwrites or deletions.
+
+
+7. What is the difference between Bucket Policies and IAM Policies?
+
+Bucket Policies: JSON-based access rules specific to a bucket. They can allow or deny actions for specific users or AWS accounts.
+
+IAM Policies: JSON documents attached to IAM users, groups, or roles that define permissions across AWS services.
+
+
+
+8. What is a pre-signed URL in S3?
+A pre-signed URL grants temporary access to a specific object in S3, allowing users to upload or download without requiring additional permissions.
+
+
+9. What are lifecycle policies in S3?
+Lifecycle policies automatically transition objects to different storage classes (e.g., move from Standard to Glacier) or delete them after a specific period.
+
+
+
+
+---
+
+Advanced Questions
+
+10. What is Cross-Region Replication (CRR)?
+CRR automatically replicates objects across buckets in different AWS regions for disaster recovery or compliance. Both buckets must have versioning enabled.
+
+
+11. How does S3 handle eventual consistency?
+
+Strong consistency for new object PUTs and DELETEs.
+
+Eventual consistency for overwrite PUTs and DELETEs across multiple regions.
+
+
+
+12. What are S3 Event Notifications?
+S3 can send event notifications to Amazon SQS, SNS, or Lambda when specific events occur in a bucket, like object creation or deletion.
+
+
+13. What is the difference between S3 Glacier and S3 Glacier Deep Archive?
+
+Glacier: Retrieval within minutes to hours, slightly costlier than Deep Archive.
+
+Deep Archive: Designed for long-term storage, retrieval takes 12–48 hours, and it's cheaper.
+
+
+
+14. What is S3 Transfer Acceleration?
+S3 Transfer Acceleration enables fast and secure file transfers by leveraging AWS's edge locations.
+
+
+
+
+---
+
+Scenario-Based Questions
+
+15. How would you host a static website using S3?
+
+Enable static website hosting on the bucket.
+
+Upload the HTML, CSS, and other files.
+
+Configure the bucket policy to allow public read access.
+
+Optionally use Route 53 for custom domain integration.
+
+
+
+16. How would you troubleshoot if files in an S3 bucket are downloading instead of displaying in the browser?
+
+Check and set the correct Content-Type metadata for files (e.g., text/html for HTML files).
+
+Ensure static website hosting is enabled on the bucket.
+
+
+
+17. How would you secure an S3 bucket for sensitive data?
+
+Use bucket policies or IAM roles to restrict access.
+
+Enable server-side encryption (SSE-KMS).
+
+Enable access logging for auditing.
+
+Block public access using the bucket configuration.
+
+
+
+18. How do you optimize costs in S3?
+
+Use lifecycle policies to transition infrequently accessed data to IA or Glacier storage.
+
+Use S3 Intelligent-Tiering for unpredictable access patterns.
+
+Enable compression for objects before storing them.
+
+
+
+
+
+---
+
+Let me know if you'd like more advanced or niche questions!
+
