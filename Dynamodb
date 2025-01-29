@@ -1,0 +1,167 @@
+Here’s a list of commonly asked DynamoDB interview questions along with answers to help you prepare:
+
+
+---
+
+Basic Questions
+
+1. What is DynamoDB?
+Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability. It is used to store key-value and document data structures.
+
+2. What are the benefits of using DynamoDB?
+
+Fully managed (no server maintenance)
+
+High availability and durability with multi-AZ replication
+
+Scalability (handles any amount of traffic)
+
+Flexible data model (key-value and document)
+
+Built-in security with encryption at rest and in transit
+
+
+3. What type of data models does DynamoDB support?
+DynamoDB supports:
+
+Key-Value Store: Similar to a dictionary.
+
+Document Store: Stores semi-structured data like JSON.
+
+
+4. How does DynamoDB ensure high availability?
+DynamoDB replicates data across multiple Availability Zones in a region, ensuring fault tolerance and high availability.
+
+
+---
+
+Intermediate Questions
+
+5. What are the core components of DynamoDB?
+
+Tables: Collections of items.
+
+Items: Individual rows in a table, analogous to records.
+
+Attributes: Columns in a table, defining item properties.
+
+Primary Key: Uniquely identifies items in a table.
+
+Partition Key: A single attribute.
+
+Composite Key: Combination of partition key and sort key.
+
+
+
+6. What is the difference between a partition key and a composite key?
+
+Partition Key: A single attribute used to determine the item's storage location.
+
+Composite Key: Consists of a partition key and a sort key. The sort key allows multiple items with the same partition key but different sort keys.
+
+
+7. What are DynamoDB streams?
+DynamoDB Streams capture data modification events (insert, update, delete) in a table and allow applications to process these changes asynchronously.
+
+8. What is the difference between Provisioned and On-Demand capacity modes?
+
+Provisioned Mode: You specify read/write capacity units (RCUs/WCUs) upfront, suitable for predictable workloads.
+
+On-Demand Mode: Automatically scales capacity as needed, suitable for unpredictable or spiky workloads.
+
+
+9. How does DynamoDB handle eventual consistency?
+DynamoDB supports two consistency models:
+
+Eventually Consistent Reads: Returns the most recent data, but slight propagation delays may occur.
+
+Strongly Consistent Reads: Guarantees the latest data is always returned.
+
+
+10. What are Global Secondary Indexes (GSIs) and Local Secondary Indexes (LSIs)?
+
+GSI: An index with a partition key and optionally a sort key different from the table's primary key. GSIs can span all partitions.
+
+LSI: An index with the same partition key as the table but a different sort key, limited to the same partition.
+
+
+
+---
+
+Advanced Questions
+
+11. How does DynamoDB achieve scalability?
+DynamoDB automatically partitions data across multiple nodes based on the partition key's hashed value. As the table size grows, DynamoDB adds more partitions to handle the increased load.
+
+12. What is a DynamoDB partition?
+A partition is a physical storage block that DynamoDB uses to store data. The partition key determines how items are distributed across partitions.
+
+13. What is a hot partition, and how do you avoid it?
+
+Hot Partition: Occurs when a single partition key receives disproportionate read/write traffic, causing performance issues.
+
+Solution: Use a more evenly distributed partition key (e.g., adding random suffixes or using UUIDs).
+
+
+14. What are DynamoDB transactions?
+Transactions enable you to perform multiple operations on one or more tables atomically. They ensure ACID (Atomicity, Consistency, Isolation, Durability) compliance for business-critical applications.
+
+15. How does DynamoDB handle backups?
+
+On-Demand Backup: Allows full backups that can be restored at any time.
+
+Point-in-Time Recovery (PITR): Automatically backs up the table and allows recovery to any point within the last 35 days.
+
+
+
+---
+
+Scenario-Based Questions
+
+16. How would you design a DynamoDB schema for an e-commerce application?
+
+Use a partition key like CustomerID or OrderID for efficient lookups.
+
+Use a sort key like OrderDate to enable range queries.
+
+Create GSIs for queries like ProductCategory or OrderStatus.
+
+
+17. How would you handle a use case requiring frequent updates to a single key?
+
+Use conditional writes to avoid overwriting existing data unintentionally.
+
+Optimize the design to distribute load across multiple keys.
+
+
+18. How do you query a DynamoDB table?
+You can query a DynamoDB table using:
+
+Query Operation: Retrieves items using the primary key (partition key and optional sort key).
+
+Scan Operation: Scans the entire table (less efficient than Query).
+
+
+19. How would you troubleshoot high latency in DynamoDB?
+
+Check for hot partitions.
+
+Review CloudWatch metrics (e.g., throttled requests).
+
+Optimize table design (e.g., better partition keys).
+
+Consider increasing RCUs/WCUs or switching to On-Demand mode.
+
+
+20. When would you use DynamoDB over RDS?
+
+Use DynamoDB for applications requiring high throughput and low-latency operations (e.g., IoT, gaming, real-time analytics).
+
+Use RDS for structured data and complex relational queries.
+
+
+
+---
+
+Let me know if you need deeper explanations or further customization!
+
