@@ -1,0 +1,154 @@
+Here are some common AWS Lambda interview questions along with their answers to help you prepare:
+
+
+---
+
+Basic Questions
+
+1. What is AWS Lambda?
+AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers. It automatically scales based on the number of incoming requests.
+
+
+2. What are the benefits of using AWS Lambda?
+
+No server management
+
+Scales automatically
+
+Pay-per-use pricing
+
+Built-in fault tolerance
+
+Integrates with other AWS services
+
+
+
+3. What languages are supported by AWS Lambda?
+AWS Lambda supports Python, Java, Node.js, Ruby, Go, .NET (C#), and custom runtimes via AWS Lambda layers.
+
+
+
+
+---
+
+Intermediate Questions
+
+4. What triggers AWS Lambda functions?
+
+API Gateway
+
+S3 (file uploads)
+
+DynamoDB Streams
+
+CloudWatch Events and Logs
+
+SNS and SQS
+
+Kinesis Streams
+
+
+
+5. What is the maximum execution time for a Lambda function?
+The maximum execution time is 15 minutes (900 seconds).
+
+
+6. How does AWS Lambda handle scaling?
+AWS Lambda scales automatically by running instances of the function in response to the number of incoming requests. There is no limit to the number of requests it can handle concurrently unless concurrency limits are set.
+
+
+7. What is cold start in AWS Lambda?
+A cold start occurs when a new instance of a Lambda function is initialized for the first time. It involves loading the code and runtime, which can lead to latency. Repeated calls use a warm instance, reducing latency.
+
+
+
+
+---
+
+Advanced Questions
+
+8. How can you optimize the performance of a Lambda function?
+
+Minimize cold starts by keeping the function warm using scheduled invocations.
+
+Use smaller package sizes to reduce deployment and execution time.
+
+Optimize code for efficiency.
+
+Increase allocated memory for CPU-intensive tasks.
+
+Use AWS Lambda Layers for reusable components.
+
+
+
+9. What are AWS Lambda layers?
+Lambda layers are a way to share libraries, custom runtimes, or other code among multiple Lambda functions.
+
+
+10. How do you troubleshoot AWS Lambda failures?
+
+Use AWS CloudWatch Logs to monitor execution details.
+
+Check AWS X-Ray for distributed tracing and debugging.
+
+Validate IAM roles for permissions issues.
+
+
+
+11. How does AWS Lambda handle security?
+
+Functions are executed within a secure VPC environment.
+
+You can define IAM roles for Lambda functions to restrict access to AWS resources.
+
+Environment variables can be encrypted using KMS.
+
+
+
+
+
+---
+
+Scenario-Based Questions
+
+12. How would you integrate Lambda with an S3 bucket?
+
+Create an S3 bucket and configure an event (e.g., ObjectCreated).
+
+Link the event to an AWS Lambda function.
+
+Write code in the Lambda function to process uploaded files.
+
+
+
+13. How would you implement a Lambda function for real-time data processing?
+
+Use AWS Kinesis Streams or DynamoDB Streams to trigger the Lambda function.
+
+Write the logic in the function to process the incoming data and store results in a target service like DynamoDB or S3.
+
+
+
+14. What is the AWS Lambda pricing model?
+
+Request Pricing: $0.20 per 1 million requests.
+
+Compute Pricing: $0.00001667 for every GB-second of execution time.
+
+
+
+
+
+---
+
+Behavioral Question
+
+15. Can you describe a project where you used AWS Lambda?
+Be prepared to explain how you utilized Lambda, the services it integrated with, the challenges you faced, and the benefits achieved. For example:
+"I built a serverless application using AWS Lambda and S3 to process uploaded images. Whenever a user uploaded an image to S3, a Lambda function was triggered to resize and store the image in another S3 bucket. This setup was cost-effective and scalable."
+
+
+
+Let me know if you'd like more examples or clarification!
+
+
