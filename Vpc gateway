@@ -1,0 +1,133 @@
+Here are some interview questions and answers related to AWS Transit Gateway, Flow Logs, and VPC Endpoints:
+
+
+---
+
+Transit Gateway
+
+1. What is AWS Transit Gateway?
+
+Answer: AWS Transit Gateway is a network transit hub that allows you to connect multiple VPCs, on-premises data centers, and AWS Direct Connect or VPN connections through a centralized routing mechanism instead of peering each VPC separately.
+
+2. How does Transit Gateway differ from VPC peering?
+
+Answer:
+| Feature | Transit Gateway | VPC Peering | |---------|----------------|-------------| | Scalability | Connects thousands of VPCs | Limited to a few VPCs | | Routing Complexity | Centralized routing via TGW | Full mesh complexity | | Multicast Support | Yes | No | | Inter-region Support | Yes | Yes (limited) | | Bandwidth | Uses AWS backbone | Peer-to-peer |
+
+3. How does AWS Transit Gateway handle route propagation?
+
+Answer: Transit Gateway uses route tables to manage how traffic flows between attached VPCs and on-premises networks. It supports static and dynamic (BGP-based) route propagation.
+
+4. What are Transit Gateway Attachments?
+
+Answer: Attachments define connections to the Transit Gateway. These include:
+
+VPC attachments (for connecting VPCs)
+
+VPN attachments (for site-to-site VPN)
+
+Direct Connect attachments (for on-premise AWS connectivity)
+
+Peering attachments (for inter-region TGW connections)
+
+
+5. Can you apply Security Groups to a Transit Gateway?
+
+Answer: No, Security Groups are VPC-specific. However, you can use Network ACLs and AWS Network Firewall for security.
+
+
+---
+
+VPC Flow Logs
+
+6. What are VPC Flow Logs?
+
+Answer: VPC Flow Logs capture IP traffic metadata flowing through your VPC's network interfaces (ENIs) for security monitoring, troubleshooting, and compliance.
+
+7. Where can VPC Flow Logs be stored?
+
+Answer: They can be sent to:
+
+Amazon CloudWatch Logs
+
+Amazon S3
+
+Amazon Kinesis Data Firehose
+
+
+8. What are the different flow log record types?
+
+Answer:
+
+Accepted traffic: Allowed network flows
+
+Rejected traffic: Blocked network flows
+
+All traffic: Both accepted and rejected
+
+
+9. Can you enable VPC Flow Logs on Transit Gateway?
+
+Answer: Yes, Transit Gateway supports flow logs, which provide visibility into traffic between connected networks.
+
+10. What are some common use cases for VPC Flow Logs?
+
+Answer:
+
+Security analysis (Detect suspicious activity)
+
+Troubleshooting connectivity issues
+
+Compliance and auditing
+
+
+
+---
+
+VPC Endpoints
+
+11. What are VPC Endpoints?
+
+Answer: VPC Endpoints enable private connectivity between a VPC and AWS services without using the internet, NAT Gateway, or VPN.
+
+12. What are the types of VPC Endpoints?
+
+Answer:
+
+Interface Endpoint: Uses ENI to connect to AWS services like S3, DynamoDB, and CloudWatch privately.
+
+Gateway Endpoint: Specifically for S3 and DynamoDB.
+
+Gateway Load Balancer Endpoint (GWLB Endpoint): Routes traffic to a GWLB for inspection.
+
+
+13. What are the benefits of using VPC Endpoints?
+
+Answer:
+
+Improved Security (No exposure to public internet)
+
+Reduced Latency (Direct AWS backbone traffic)
+
+Cost Savings (Avoids NAT Gateway charges)
+
+
+14. How do Interface Endpoints differ from Gateway Endpoints?
+
+Answer:
+| Feature | Interface Endpoint | Gateway Endpoint | |---------|------------------|----------------| | Uses ENI? | Yes | No | | Supported Services | Most AWS services | Only S3 & DynamoDB | | Private IP | Yes | No | | Requires Route Table Update? | No | Yes |
+
+15. Can you apply Security Groups to a VPC Endpoint?
+
+Answer:
+
+Yes, for Interface Endpoints (since they use ENIs)
+
+No, for Gateway Endpoints (since they are route-based)
+
+
+
+---
+
+Let me know if you need more questions or deeper explanations!
+
