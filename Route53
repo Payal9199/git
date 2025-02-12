@@ -1,0 +1,253 @@
+Here are some commonly asked AWS Route 53 interview questions along with their answers:
+
+
+---
+
+1. What is AWS Route 53?
+
+Answer:
+AWS Route 53 is a highly available and scalable Domain Name System (DNS) web service that helps route traffic to AWS resources and external websites. It supports domain registration, DNS routing, and health checking.
+
+
+---
+
+2. What are the main features of Route 53?
+
+Answer:
+
+Domain Registration – Buy and manage domain names.
+
+DNS Routing – Map domain names to AWS resources like EC2, S3, and CloudFront.
+
+Traffic Flow – Route traffic intelligently based on latency, geolocation, and other factors.
+
+Health Checks & Failover – Monitor endpoints and automatically route traffic to healthy ones.
+
+Private DNS – Manage internal DNS within a VPC.
+
+
+
+---
+
+3. What are the routing policies available in Route 53?
+
+Answer:
+
+1. Simple Routing – Routes traffic to a single resource (no failover).
+
+
+2. Weighted Routing – Distributes traffic across multiple resources based on assigned weights.
+
+
+3. Latency-based Routing – Routes users to the AWS region with the lowest latency.
+
+
+4. Geolocation Routing – Routes users based on their geographic location.
+
+
+5. Geoproximity Routing – Routes traffic based on a bias that increases/decreases traffic to a region.
+
+
+6. Failover Routing – Routes traffic to a primary resource and fails over to a secondary resource if the primary is unhealthy.
+
+
+7. Multivalue Answer Routing – Returns multiple healthy IPs for load balancing.
+
+
+
+
+---
+
+4. What is the difference between a Public Hosted Zone and a Private Hosted Zone?
+
+
+---
+
+5. How does Route 53 handle failover?
+
+Answer:
+
+Route 53 uses health checks to monitor endpoint availability.
+
+In Failover Routing, if the primary endpoint fails, traffic is redirected to the secondary endpoint automatically.
+
+Health checks can monitor HTTP, TCP, or HTTPS response codes.
+
+
+
+---
+
+6. What is an Alias Record in Route 53? How is it different from a CNAME?
+
+Answer:
+
+Alias Record:
+
+Works at the root domain level (e.g., example.com).
+
+Maps directly to AWS resources (e.g., S3, CloudFront, ALB, ELB).
+
+Free of cost in Route 53.
+
+
+CNAME Record:
+
+Can only be used on subdomains (e.g., www.example.com).
+
+Maps to another domain name but cannot point to AWS resources directly.
+
+Standard DNS resolution applies (may incur additional costs).
+
+
+
+
+---
+
+7. How do you set up a custom domain for an S3 static website using Route 53?
+
+Answer:
+
+1. Create an S3 bucket and enable "Static website hosting."
+
+
+2. Copy the S3 endpoint URL.
+
+
+3. Go to Route 53 → Create a hosted zone for your domain.
+
+
+4. Add an Alias Record pointing the domain to the S3 bucket.
+
+
+5. Update your domain's name servers (if needed).
+
+
+6. Test the setup by accessing the domain in a browser.
+
+
+
+
+---
+
+8. What is the TTL (Time to Live) in Route 53?
+
+Answer:
+
+TTL (Time to Live) is the duration (in seconds) that DNS resolvers cache a record before requesting an update from Route 53.
+
+Lower TTL values (e.g., 60 seconds) allow quicker updates but increase DNS query costs.
+
+Higher TTL values (e.g., 86400 seconds or 24 hours) reduce costs but delay updates.
+
+
+
+---
+
+9. How does Route 53 support hybrid cloud DNS resolution?
+
+Answer:
+
+Route 53 can integrate with AWS Direct Connect and VPNs for hybrid cloud setups.
+
+Private Hosted Zones enable internal name resolution within AWS VPCs.
+
+Route 53 Resolver allows forwarding DNS queries between on-premises and AWS.
+
+
+
+---
+
+10. How can Route 53 be used for disaster recovery?
+
+Answer:
+Route 53 supports disaster recovery using:
+
+Failover Routing – Automatically redirects traffic to backup resources if the primary fails.
+
+Weighted Routing – Diverts a portion of traffic to a backup region before a full failover.
+
+Latency-based Routing – Routes traffic to the closest healthy region to minimize downtime.
+
+
+
+---
+
+11. What is the difference between Route 53 and a traditional DNS provider?
+
+
+---
+
+12. Can you create a subdomain in Route 53? How?
+
+Answer:
+Yes, you can create a subdomain by:
+
+1. Creating a record set in Route 53 for the subdomain (e.g., blog.example.com).
+
+
+2. Adding an A record, CNAME, or Alias pointing to the appropriate target.
+
+
+3. If managing subdomains separately, create a new hosted zone for the subdomain and delegate NS records in the parent domain.
+
+
+
+
+---
+
+13. What are Route 53 Health Checks?
+
+Answer:
+
+Route 53 monitors endpoint health using HTTP, HTTPS, or TCP checks.
+
+If an endpoint fails, Route 53 automatically routes traffic to a backup resource (failover).
+
+You can configure CloudWatch Alarms for failed health checks.
+
+
+
+---
+
+14. How do you migrate a domain to Route 53?
+
+Answer:
+
+1. Check domain eligibility in Route 53.
+
+
+2. Unlock the domain with the current registrar.
+
+
+3. Get the transfer authorization code from the existing provider.
+
+
+4. Initiate domain transfer in Route 53 and enter the code.
+
+
+5. Approve the transfer via email confirmation.
+
+
+6. Update the name servers to Route 53 if needed.
+
+
+
+
+---
+
+15. What is Route 53 Resolver?
+
+Answer:
+
+Route 53 Resolver is an AWS-managed service for DNS resolution between on-premises data centers and AWS VPCs.
+
+It enables DNS forwarding and hybrid cloud integration.
+
+Works with AWS Direct Connect and VPNs.
+
+
+
+---
+
+These questions cover the most commonly asked Route 53 topics. Would you like more scenario-based questions?
+
