@@ -1,0 +1,279 @@
+Here are some scenario-based AWS Route 53 interview questions along with their answers:
+
+
+---
+
+1. Scenario: A company wants to route traffic to its application in the nearest AWS region for better performance. How can they achieve this?
+
+Answer:
+
+Use Latency-based Routing in Route 53.
+
+Create records for each AWS region where the application is deployed.
+
+Route 53 will automatically direct users to the closest region with the lowest latency.
+
+
+
+---
+
+2. Scenario: Your website is hosted on an EC2 instance, and users report intermittent downtime. How would you troubleshoot using Route 53?
+
+Answer:
+
+1. Check Route 53 health checks – Ensure the EC2 instance has an associated health check.
+
+
+2. Verify DNS records – Ensure the domain points to the correct public IP or load balancer.
+
+
+3. Check EC2 instance status – Verify that the instance is running and reachable.
+
+
+4. Analyze CloudWatch logs – Identify potential failures.
+
+
+5. Test connectivity – Use nslookup or dig commands to check DNS resolution.
+
+
+
+
+---
+
+3. Scenario: A global e-commerce website wants to serve different versions of the website based on users’ countries. How can this be implemented?
+
+Answer:
+
+Use Geolocation Routing in Route 53.
+
+Create separate DNS records for each country (e.g., US, India, UK).
+
+Route 53 will direct users to the appropriate version based on their geographic location.
+
+
+
+---
+
+4. Scenario: Your primary website is down, and you want traffic to be automatically redirected to a backup site. How would you achieve this?
+
+Answer:
+
+Use Failover Routing in Route 53.
+
+Configure two records:
+
+Primary record (Active) → Points to the main website.
+
+Secondary record (Passive) → Points to the backup site.
+
+
+Set up Route 53 health checks to monitor the primary site.
+
+If the primary fails, Route 53 automatically redirects traffic to the backup.
+
+
+
+---
+
+5. Scenario: A customer has multiple AWS accounts and wants to resolve internal domain names across VPCs. How can they achieve this?
+
+Answer:
+
+Use Route 53 Private Hosted Zones (PHZ) to create internal DNS records.
+
+Enable VPC Peering or AWS Transit Gateway for cross-VPC communication.
+
+Use Route 53 Resolver Rules to forward DNS queries between VPCs.
+
+
+
+---
+
+6. Scenario: Your team deployed a static website on an S3 bucket, but the domain is not resolving correctly. What steps would you take?
+
+Answer:
+
+1. Verify S3 bucket name – It must match the exact domain name (e.g., example.com).
+
+
+2. Enable static website hosting on S3.
+
+
+3. Check Route 53 records – Ensure an Alias record points to the S3 website endpoint.
+
+
+4. Verify DNS propagation – Use nslookup or dig to check if the domain is resolving.
+
+
+5. Check S3 permissions – The bucket must have public read access or a CloudFront distribution.
+
+
+
+
+---
+
+7. Scenario: A company wants to perform a canary deployment by directing 90% of users to the old version and 10% to the new version. How can they do this?
+
+Answer:
+
+Use Weighted Routing in Route 53.
+
+Create two DNS records:
+
+Old version → 90% weight
+
+New version → 10% weight
+
+
+Route 53 will distribute traffic accordingly.
+
+
+
+---
+
+8. Scenario: A customer wants to migrate their existing domain from GoDaddy to Route 53. What are the key steps?
+
+Answer:
+
+1. Check if the domain transfer is supported in Route 53.
+
+
+2. Unlock the domain in GoDaddy.
+
+
+3. Request an authorization code from GoDaddy.
+
+
+4. Initiate the transfer in Route 53 and enter the code.
+
+
+5. Approve the transfer email sent by AWS.
+
+
+6. Update name servers in Route 53 (if needed).
+
+
+7. Wait for propagation (may take 24-48 hours).
+
+
+
+
+---
+
+9. Scenario: You need to ensure your API Gateway remains accessible even if a specific AWS region goes down. How can Route 53 help?
+
+Answer:
+
+Deploy the API Gateway in multiple AWS regions.
+
+Use Latency-based Routing to direct users to the closest API.
+
+Configure Failover Routing in case one region goes down.
+
+Set up health checks to detect failures and reroute traffic.
+
+
+
+---
+
+10. Scenario: You need to set up a subdomain (api.example.com) that resolves to a CloudFront distribution. How would you do it?
+
+Answer:
+
+1. Create a CloudFront distribution and note the DNS name (xyz.cloudfront.net).
+
+
+2. Go to Route 53 and open the hosted zone for example.com.
+
+
+3. Create a CNAME or Alias record for api.example.com pointing to CloudFront.
+
+
+4. Ensure SSL/TLS is configured with an ACM certificate for api.example.com.
+
+
+5. Test DNS resolution using nslookup api.example.com.
+
+
+
+
+---
+
+11. Scenario: A company's application is deployed on-premises and in AWS. They want AWS-hosted users to resolve on-premises DNS queries. What’s the best solution?
+
+Answer:
+
+Use Route 53 Resolver with Outbound Endpoints.
+
+Create Forwarding Rules to send DNS queries for on-prem domains to the on-premises DNS servers.
+
+Ensure VPC DNS resolution is enabled.
+
+
+
+---
+
+12. Scenario: Your website’s DNS updates are taking too long to propagate. What could be the reason?
+
+Answer:
+
+1. High TTL value – Lower the TTL to propagate changes faster.
+
+
+2. DNS caching – Flush local and ISP caches (ipconfig /flushdns).
+
+
+3. Registrar delay – Ensure the domain registrar has updated name servers.
+
+
+4. Propagation time – Global updates may take up to 24 hours.
+
+
+
+
+---
+
+13. Scenario: A business wants users from the US to be routed to an application running on AWS while users from Europe should be routed to their on-prem data center. How can they configure this?
+
+Answer:
+
+Use Geolocation Routing in Route 53.
+
+Create a record for the US pointing to the AWS application.
+
+Create a record for Europe pointing to the on-prem data center.
+
+
+
+---
+
+14. Scenario: How would you monitor and log DNS queries in Route 53?
+
+Answer:
+
+Enable Route 53 Query Logging.
+
+Send logs to CloudWatch Logs, S3, or Kinesis Data Firehose for analysis.
+
+Use Athena or CloudTrail to analyze query trends.
+
+
+
+---
+
+15. Scenario: A company has multiple subdomains like app.example.com, blog.example.com, and shop.example.com. They want a centralized way to manage them. What’s the best approach?
+
+Answer:
+
+Use a single Hosted Zone for example.com in Route 53.
+
+Create A, CNAME, or Alias records for each subdomain (app, blog, shop).
+
+Optionally, create a wildcard record (*.example.com) for dynamic subdomain handling.
+
+
+
+---
+
+These scenario-based Route 53 interview questions will help you prepare for real-world use cases. Do you want more hands-on practical exercises as well?
+
