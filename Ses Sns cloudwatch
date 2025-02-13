@@ -1,0 +1,163 @@
+Here are some common AWS interview questions on Amazon SES, SNS, and CloudWatch Alarms, along with their answers:
+
+
+---
+
+Amazon Simple Email Service (SES)
+
+1. What is Amazon SES?
+Answer: Amazon Simple Email Service (SES) is a cloud-based email-sending service that allows businesses to send marketing, transactional, and notification emails at scale. It supports SMTP and API-based sending.
+
+
+2. What are the key use cases of Amazon SES?
+Answer:
+
+Sending transactional emails (e.g., order confirmations, password resets).
+
+Marketing emails (newsletters, promotions).
+
+Notifications (alerts, system updates).
+
+
+
+3. How does SES handle email deliverability and reputation management?
+Answer: SES includes features like:
+
+Dedicated IPs for better reputation control.
+
+DKIM and SPF to authenticate emails.
+
+Suppression list to prevent sending to bounced or complaint-raising addresses.
+
+Bounce and complaint monitoring via SNS notifications.
+
+
+
+4. What is a sending quota in SES?
+Answer: The sending quota defines the maximum number of emails that can be sent per day and per second. AWS increases quotas based on reputation and request.
+
+
+5. How can you monitor email sending status in SES?
+Answer: By integrating SES with CloudWatch, SNS, or event publishing, you can track email bounces, complaints, and delivery metrics.
+
+
+
+
+---
+
+Amazon Simple Notification Service (SNS)
+
+6. What is Amazon SNS?
+Answer: Amazon Simple Notification Service (SNS) is a fully managed pub/sub messaging service that enables message distribution to multiple subscribers, including email, SMS, Lambda, and SQS.
+
+
+7. How does SNS work?
+Answer: SNS operates on a publisher-subscriber model, where publishers send messages to topics, and subscribers receive messages through different protocols (HTTP/S, email, SMS, Lambda, or SQS).
+
+
+8. What are some common use cases for SNS?
+Answer:
+
+Sending notifications (e.g., system alerts, monitoring events).
+
+Broadcasting messages to multiple recipients.
+
+Decoupling microservices in event-driven architectures.
+
+
+
+9. What is the difference between SNS and SQS?
+Answer:
+
+SNS (Push-based): Messages are pushed to multiple subscribers.
+
+SQS (Pull-based): Messages are stored in a queue until consumers poll and retrieve them.
+
+SNS is used for event notifications, while SQS is better for decoupling services.
+
+
+
+10. How can SNS be secured?
+Answer: By using:
+
+
+
+Access policies to restrict who can publish/subscribe.
+
+Encryption (KMS) for message security.
+
+VPC Endpoints for private communication.
+
+
+
+---
+
+Amazon CloudWatch Alarms
+
+11. What is Amazon CloudWatch?
+Answer: Amazon CloudWatch is a monitoring and observability service that provides metrics, logs, and alarms for AWS resources and applications.
+
+
+12. What are CloudWatch Alarms?
+Answer: CloudWatch Alarms monitor specific AWS metrics and trigger actions when predefined thresholds are exceeded.
+
+
+13. How do you create a CloudWatch Alarm?
+Answer:
+
+
+
+Choose a metric (e.g., CPU utilization, memory usage).
+
+Set a threshold condition (e.g., CPU > 80%).
+
+Define an action (e.g., send SNS notification, trigger an Auto Scaling action).
+
+Attach the alarm to a resource.
+
+
+14. What are the possible states of a CloudWatch Alarm?
+Answer:
+
+
+
+OK: The metric is within the normal threshold.
+
+ALARM: The metric has breached the threshold.
+
+INSUFFICIENT_DATA: Not enough data to determine the state.
+
+
+15. What are some use cases for CloudWatch Alarms?
+Answer:
+
+
+
+Monitoring EC2 instance performance.
+
+Automatically scaling instances based on traffic.
+
+Sending alerts for high latency, errors, or application failures.
+
+
+16. Can CloudWatch Alarms trigger Auto Scaling?
+Answer: Yes, alarms can trigger Auto Scaling policies to launch or terminate instances based on metrics like CPU utilization.
+
+
+17. How can you reduce unnecessary alarm notifications?
+Answer: By using:
+
+
+
+Anomaly detection to avoid false positives.
+
+Multiple evaluation periods before triggering an alarm.
+
+Metric math to combine multiple conditions.
+
+
+
+---
+
+Would you like more detailed explanations or scenario-based questions?
+
