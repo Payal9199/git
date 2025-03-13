@@ -1,0 +1,286 @@
+Here’s a systematic Terraform configuration using modules to deploy a secure web server on a private EC2 instance. It includes:
+
+1. VPC & Networking (NAT Gateway for outbound access)
+
+
+2. EC2 Instance (Private with a user-data script for web server setup)
+
+
+3. Application Load Balancer (Public-facing with HTTPS support)
+
+
+4. Auto Scaling Group (Ensures high availability)
+
+
+5. CloudWatch Logging (Web server logs via CloudWatch agent)
+
+
+
+
+---
+
+Folder Structure
+
+terraform/
+├── modules/
+│   ├── vpc/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   ├── ec2/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   ├── alb/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   ├── asg/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   ├── cloudwatch/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+├── main.tf
+├── variables.tf
+├── outputs.tf
+
+
+---
+
+1. VPC Module (modules/vpc/main.tf)
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "private" {
+  count             = 2
+  vpc_id           = aws_vpc.main.id
+  cidr_block       = "10.0.${count.index + 1}.0/24"
+  availability_zone = element(["us-east-1a", "us-east-1b"], count.index)
+  map_public_ip_on_launch = false
+}
+
+resource "aws_subnet" "public" {
+  count             = 2
+  vpc_id           = aws_vpc.main.id
+  cidr_block       = "10.0.${count.index + 3}.0/24"
+  availability_zone = element(["us-east-1a", "us-east-1b"], count.index)
+  map_public_ip_on_launch = true
+}
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public[0].id
+}
+
+resource "aws_eip" "nat" {
+  domain = "vpc"
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+}
+
+resource "aws_route" "private_nat" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
+}
+
+resource "aws_route_table_association" "private" {
+  count = 2
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private.id
+}
+
+output "vpc_id" {
+  value = aws_vpc.main.id
+}
+
+output "private_subnets" {
+  value = aws_subnet.private[*].id
+}
+
+output "public_subnets" {
+  value = aws_subnet.public[*].id
+}
+
+
+---
+
+2. EC2 Module (modules/ec2/main.tf)
+
+resource "aws_launch_template" "web" {
+  name_prefix   = "web-server"
+  image_id      = "ami-12345678"
+  instance_type = "t3.micro"
+  vpc_security_group_ids = [var.security_group_id]
+
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    sudo yum install -y httpd
+    sudo systemctl start httpd
+    sudo systemctl enable httpd
+    echo "Welcome to Secure Web Server" > /var/www/html/index.html
+  EOF
+  )
+}
+
+output "launch_template_id" {
+  value = aws_launch_template.web.id
+}
+
+
+---
+
+3. Application Load Balancer (modules/alb/main.tf)
+
+resource "aws_lb" "alb" {
+  name               = "web-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [var.security_group_id]
+  subnets           = var.public_subnets
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 443
+  protocol         = "HTTPS"
+  ssl_policy       = "ELBSecurityPolicy-2016-08"
+  certificate_arn  = var.acm_certificate_arn
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.web.arn
+  }
+}
+
+resource "aws_lb_target_group" "web" {
+  name     = "web-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+}
+
+output "alb_dns_name" {
+  value = aws_lb.alb.dns_name
+}
+
+
+---
+
+4. Auto Scaling (modules/asg/main.tf)
+
+resource "aws_autoscaling_group" "web" {
+  vpc_zone_identifier = var.private_subnets
+  desired_capacity    = 2
+  max_size           = 4
+  min_size           = 2
+  launch_template {
+    id      = var.launch_template_id
+    version = "$Latest"
+  }
+}
+
+resource "aws_autoscaling_policy" "scale_up" {
+  autoscaling_group_name = aws_autoscaling_group.web.name
+  scaling_adjustment    = 1
+  adjustment_type      = "ChangeInCapacity"
+}
+
+
+---
+
+5. CloudWatch Logging (modules/cloudwatch/main.tf)
+
+resource "aws_cloudwatch_log_group" "web_logs" {
+  name = "/var/log/webserver"
+}
+
+resource "aws_ssm_document" "cw_agent" {
+  name          = "CloudWatchAgent"
+  document_type = "Command"
+  content       = <<EOT
+{
+  "schemaVersion": "2.2",
+  "description": "Install CloudWatch Agent",
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "installCWAgent",
+      "inputs": {
+        "runCommand": [
+          "sudo yum install -y amazon-cloudwatch-agent",
+          "sudo systemctl start amazon-cloudwatch-agent"
+        ]
+      }
+    }
+  ]
+}
+EOT
+}
+
+resource "aws_ssm_association" "cw_agent_assoc" {
+  name = aws_ssm_document.cw_agent.name
+  targets {
+    key    = "InstanceIds"
+    values = var.instance_ids
+  }
+}
+
+
+---
+
+Main Configuration (main.tf)
+
+module "vpc" {
+  source = "./modules/vpc"
+}
+
+module "ec2" {
+  source            = "./modules/ec2"
+  security_group_id = module.vpc.security_group_id
+}
+
+module "alb" {
+  source            = "./modules/alb"
+  public_subnets    = module.vpc.public_subnets
+  vpc_id           = module.vpc.vpc_id
+}
+
+module "asg" {
+  source             = "./modules/asg"
+  launch_template_id = module.ec2.launch_template_id
+  private_subnets    = module.vpc.private_subnets
+}
+
+module "cloudwatch" {
+  source       = "./modules/cloudwatch"
+  instance_ids = module.asg.instance_ids
+}
+
+
+---
+
+This setup ensures:
+
+Private EC2 Instances with outbound internet via NAT
+
+Load Balancer for secure public access
+
+Auto Scaling for high availability
+
+CloudWatch Agent for logging
+
+
+Let me know if you need modifications!
+
