@@ -1,0 +1,55 @@
+from db_connection1 import connect_mysql, connect_postgres
+
+# Generic MySQL query executor
+async def execute_mysql_query(query, params=None):
+    try:
+        conn = await connect_mysql()
+        async with conn.cursor() as cursor:
+            await cursor.execute(query, params)
+            result = await cursor.fetchall()
+        conn.close()
+        return result
+    except Exception as e:
+        print("MySQL Error:", e)
+        return None
+
+# Generic PostgreSQL query executor
+async def execute_postgres_query(query, params=None):
+    try:
+        conn = await connect_postgres()
+        result = await conn.fetch(query, *params) if params else await conn.fetch(query)
+        await conn.close()
+        return result
+    except Exception as e:
+        print("PostgreSQL Error:", e)
+        return None
+
+# Unified dynamic function
+async def execute_query(query, params=None, db_type="mysql"):
+    db_type = db_type.lower()
+    if db_type == "mysql":
+        return await execute_mysql_query(query, params)
+    elif db_type == "postgresql":
+        return await execute_postgres_query(query, params)
+    else:
+        raise ValueError("Unsupported DB type. Use 'mysql' or 'postgresql'")
+
+
+
+
+
+from db_module import execute_query
+
+async def fetch_by_id(id_value):
+    query = "SELECT first_name FROM team WHERE Id1 = %s"
+    result = await execute_query(query, (id_value,), db_type="mysql")
+    print(result)
+
+async def fetch_by_name(name_value):
+    query = "SELECT Id1 FROM team WHERE first_name = %s"
+    result = await execute_query(query, (name_value,), db_type="mysql")
+    print(result)
+
+
+query = "SELECT Id1 FROM team WHERE first_name = $1"
+await execute_query(query, (name_value,), db_type="postgresql")
